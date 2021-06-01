@@ -1,26 +1,27 @@
 <template>  
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
-  <h2>{{pokemon.name}}</h2>
-  <div
-    class="pokemon-image"
-    :class="hidden ? 'pokemon-image--hidden' : '' "
-    :style="'background-image: url(' + pokemon.imageUrl + ')'">
-  </div>
-  <div>
+<main>
+  <section class="pokeball-center">
+    <div
+      class="pokemon-image"
+      :class="hidden ? 'pokemon-image--hidden' : '' "
+      :style="'background-image: url(' + pokemon.imageUrl + ')'">
+    </div>
+  </section>
+
+  <section>
     <input @keyup.enter="checkGuess" v-model="userGuess">
     <button @click="checkGuess">Submit</button>
-  </div>
-
+  </section>
+</main>
 </template>
 
 <script>
 import axios from 'axios';
-import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    
   },
   data () {
     return {
@@ -59,6 +60,50 @@ export default {
 </script>
 
 <style>
+  :root {
+
+  }
+  * {
+    box-sizing: border-box;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    background-color: #6299d6;
+    background: linear-gradient(to top, 
+    #fff, 
+    #fff 50vh, 
+    #000 50vh, 
+    #000 calc(50vh + 20px), 
+    #6299d6 calc(50vh + 20px), 
+    #6299d6);
+  }
+  main:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    background-image: url(assets/pokeball-outline.png);
+    background-blend-mode: screen;
+  }
+  .pokeball-center {
+    background-color: #fff;
+    border: 20px solid #000;
+    border-radius: 50%;
+    width: 300px;
+    height: 300px;
+    
+  
+  }
   .pokemon-image {
     min-width: 300px;
     min-height: 300px;
