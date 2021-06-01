@@ -7,7 +7,7 @@
     :style="'background-image: url(' + pokemon.imageUrl + ')'">
   </div>
   <div>
-    <input v-model="userGuess">
+    <input @keyup.enter="checkGuess" v-model="userGuess">
     <button @click="checkGuess">Submit</button>
   </div>
 
