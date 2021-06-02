@@ -1,5 +1,5 @@
 <template>  
-<main :class="pokemon.types[0] + ' ' +  pokemon.types[1] ">
+<main :style="'--c1: ' + styleBasedOnType[0] + '; ' + '--c2: ' + styleBasedOnType[1]">
   <section class="pokeball-center">
     <div
       class="pokemon-image"
@@ -25,10 +25,11 @@ export default {
   },
   data () {
     return {
+      selectedPokemon: 1,
       pokemon: {
         name: '',
         imageUrl: '',
-        types: []
+        types: [],
       },
       userGuess: '',
       hidden: true,
@@ -38,16 +39,85 @@ export default {
   mounted () {
     axios
     /* Get Pokemon Data */
-      .get('https://pokeapi.co/api/v2/pokemon/1')
+      .get('https://pokeapi.co/api/v2/pokemon/100')
       .then(response => {
         this.pokemon.name = response.data.name;
         this.pokemon.imageUrl = response.data.sprites.front_default;
         response.data.types.forEach(e => this.pokemon.types.push(e.type.name));
+
         })
       
   },
 
   computed: {
+    styleBasedOnType: function () {
+      let temp = [];
+      for(const type in this.pokemon.types) {
+        switch(this.pokemon.types[type]) {
+          case 'normal': 
+            temp.push('#ffffff');
+          break;
+          case 'fire': 
+            temp.push('#d88332');
+          break;
+          case 'water': 
+            temp.push('#6299d6');
+          break;
+          case 'grass': 
+            temp.push('#80cbae');
+          break;
+          case 'electric': 
+            temp.push('#e7cf61');
+          break;
+          case 'ice': 
+            temp.push('#ffffff');
+          break;
+          case 'fighting': 
+            temp.push('#ffffff');
+          break;
+          case 'poison': 
+            temp.push('#8a51d2');
+          break;
+          case 'ground': 
+            temp.push('#9f6825');
+          break;
+          case 'flying': 
+            temp.push('#ffffff');
+          break;
+          case 'psychic': 
+            temp.push('#ffffff');
+          break;
+          case 'bug': 
+            temp.push('#62a666');
+          break;
+          case 'rock': 
+            temp.push('#ffffff');
+          break;
+          case 'ghost': 
+            temp.push('#340f6c');
+          break;
+          case 'dark': 
+            temp.push('#1c0d31');
+          break;
+          case 'dragon': 
+            temp.push('#96c6fa');
+          break;
+          case 'steel': 
+            temp.push('#ffffff');
+          break;
+          case 'fairy': 
+            temp.push('#ffffff');
+          break;
+          default:
+            temp.push('#ffffff');
+        }
+      }
+      //Linear gradient in CSS requires 2 properties. We duplicate the first color if there isn't a second color.
+      if (temp.length < 2) {
+        temp.push(temp[0]);
+      }
+      return temp;
+    }
   },
 
   methods: {
@@ -98,7 +168,7 @@ export default {
     width: 100vw;
     height: calc(50vh - var(--pokeball-border));
     background-color: var(--bg);
-    background-image: linear-gradient(var(--bg), var(--bg2)), url(assets/pokeball-outline.png), url(assets/pokeball-outline.png);
+    background-image: linear-gradient(var(--c1), var(--c2)), url(assets/pokeball-outline.png), url(assets/pokeball-outline.png);
     background-position: 0 0, calc(0% - 250px) 0, calc(100% + 250px)  0;
     background-size: cover, 500px, 500px;
     background-blend-mode: overlay;
@@ -126,78 +196,4 @@ export default {
   .pokemon-image--hidden {
     filter: brightness(0%);
   }
-
-.normal {
-  --bg: #ffffff;
-  --bg2: #ffffff;
-  }
-.fire {
-  --bg: #db8633;
-  --bg2: #db8633;
-  }
-.water {
-  --bg: #6299d6;
-  --bg2: #6299d6;
-  }
-.grass {
-  --bg: #80cbae;
-  --bg2: #80cbae;
-  }
-.electric {
-  --bg: #e7cf61;
-  --bg2: #e7cf61;
-  }
-.ice {
-  --bg: #ffffff;
-  --bg2: #ffffff;
-  }
-.fighting {
-  --bg: #ffffff;
-  --bg2: #ffffff;
-  }
-.poison {
-  --bg: #8a51d2;
-  --bg2: #8a51d2;
-  }
-.ground {
-  --bg: #ffffff;
-  --bg2: #ffffff;
-  }
-.flying {
-  --bg: #ffffff;
-  --bg2: #ffffff;
-  }
-.psychic {
-  --bg: #ffffff;
-  --bg2: #ffffff;
-  }
-.bug {
-  --bg: #62a666;
-  --bg2: #62a666;
-  }
-.rock {
-  --bg: #ffffff;
-  --bg2: #ffffff;
-  }
-.ghost {
-  --bg: #340f6c;
-  --bg2: #340f6c;
-  }
-.dark {
-  --bg: #1c0d31;
-  --bg2: #1c0d31;
-  }
-.dragon {
-  --bg: #96c6fa;
-  --bg2: #96c6fa;
-  }
-.steel {
-  --bg: #ffffff;
-  --bg2: #ffffff;
-  }
-.fairy {
-  --bg: #ffffff;
-  --bg2: #ffffff;
-  } 
-
 </style>
