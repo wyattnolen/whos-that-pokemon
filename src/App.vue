@@ -39,7 +39,7 @@ export default {
   mounted () {
     axios
     /* Get Pokemon Data */
-      .get('https://pokeapi.co/api/v2/pokemon/100')
+      .get('https://pokeapi.co/api/v2/pokemon/80')
       .then(response => {
         this.pokemon.name = response.data.name;
         this.pokemon.imageUrl = response.data.sprites.front_default;
@@ -55,7 +55,7 @@ export default {
       for(const type in this.pokemon.types) {
         switch(this.pokemon.types[type]) {
           case 'normal': 
-            temp.push('#ffffff');
+            temp.push('#A8A878');
           break;
           case 'fire': 
             temp.push('#d88332');
@@ -70,10 +70,10 @@ export default {
             temp.push('#e7cf61');
           break;
           case 'ice': 
-            temp.push('#ffffff');
+            temp.push('#98D8D8');
           break;
           case 'fighting': 
-            temp.push('#ffffff');
+            temp.push('#C03028');
           break;
           case 'poison': 
             temp.push('#8a51d2');
@@ -85,13 +85,13 @@ export default {
             temp.push('#ffffff');
           break;
           case 'psychic': 
-            temp.push('#ffffff');
+            temp.push('#F85888');
           break;
           case 'bug': 
             temp.push('#62a666');
           break;
           case 'rock': 
-            temp.push('#ffffff');
+            temp.push('#B8A038');
           break;
           case 'ghost': 
             temp.push('#340f6c');
@@ -103,10 +103,10 @@ export default {
             temp.push('#96c6fa');
           break;
           case 'steel': 
-            temp.push('#ffffff');
+            temp.push('#B8B8D0');
           break;
           case 'fairy': 
-            temp.push('#ffffff');
+            temp.push('#EE99AC');
           break;
           default:
             temp.push('#ffffff');
@@ -152,13 +152,7 @@ export default {
     flex-direction: column;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(to top, 
-    #fff, 
-    #fff 50vh, 
-    #000 50vh, 
-    #000 calc(50vh + 20px), 
-    var(--bg) calc(50vh + 20px), 
-    var(--bg));
+    background-color: #fff;
   }
   main:before {
     content: "";
@@ -173,6 +167,7 @@ export default {
     background-size: cover, 500px, 500px;
     background-blend-mode: overlay;
     background-repeat: no-repeat;
+    border-bottom: var(--pokeball-border) solid #000;
   }
   .pokeball-center {
     display: flex;
@@ -195,5 +190,16 @@ export default {
   }
   .pokemon-image--hidden {
     filter: brightness(0%);
+    animation: transition 3s ease-in forwards;
+  }
+
+  @keyframes transition {
+    0% {
+    filter: brightness(0%) blur(100px);
+    }
+
+    100% {
+    filter: brightness(0%) blur(0px);
+    }
   }
 </style>
