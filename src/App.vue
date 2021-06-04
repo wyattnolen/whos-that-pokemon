@@ -11,6 +11,7 @@
   <section>
     <input @keyup.enter="checkGuess" v-model="userGuess">
     <button @click="checkGuess">Submit</button>
+    <button @click="newPokemon">Give Up</button>
   </section>
 </main>
 </template>
@@ -27,6 +28,7 @@ export default {
     return {
       selectedPokemon: 1,
       pokemon: {
+        id: 80,
         name: '',
         imageUrl: '',
         types: [],
@@ -37,16 +39,7 @@ export default {
   },
 
   mounted () {
-    axios
-    /* Get Pokemon Data */
-      .get('https://pokeapi.co/api/v2/pokemon/80')
-      .then(response => {
-        this.pokemon.name = response.data.name;
-        this.pokemon.imageUrl = response.data.sprites.front_default;
-        response.data.types.forEach(e => this.pokemon.types.push(e.type.name));
-
-        })
-      
+    this.getPokemon();
   },
 
   computed: {
@@ -121,6 +114,20 @@ export default {
   },
 
   methods: {
+    getPokemon() {
+          axios
+      .get(`https://pokeapi.co/api/v2/pokemon/${this.pokemon.id}`)
+      .then(response => {
+       
+        this.pokemon.name = response.data.name;
+        this.pokemon.imageUrl = response.data.sprites.front_default;
+
+        let tempArray = [];
+        response.data.types.forEach(e => tempArray.push(e.type.name));
+        this.pokemon.types = tempArray;
+        })
+    },
+
     normalizeUserGuess() {
       return this.userGuess.toLowerCase().trim();
     },
@@ -129,7 +136,26 @@ export default {
       if (this.normalizeUserGuess() === this.pokemon.name) {
         this.hidden = false;
       }
-    }
+    },
+
+    clearGuess() {
+      this.userGuess = "";
+    },
+
+    hidePokemon() {
+      this.hidden = true;
+    },
+
+    getRandomPokemon() {
+      return Math.floor(Math.random()*150);
+    },
+
+    newPokemon() {
+      this.pokemon.id = this.getRandomPokemon();
+      this.clearGuess();
+      this.hidePokemon();
+      this.getPokemon();
+    },
   }
 }
 </script>
@@ -190,7 +216,7 @@ export default {
   }
   .pokemon-image--hidden {
     filter: brightness(0%);
-    animation: transition 3s ease-in forwards;
+    /* animation: transition 3s ease-in forwards; */
   }
 
   @keyframes transition {
