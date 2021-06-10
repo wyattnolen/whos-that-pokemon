@@ -8,10 +8,10 @@
     </div>
   </section>
 
-  <section>
-    <input @keyup.enter="checkGuess" v-model="userGuess">
-    <button @click="checkGuess">Submit</button>
-    <button @click="newPokemon">Give Up</button>
+  <section class="pokemon-userInput">
+    <input @keyup.enter="checkGuess" v-model="userGuess" class="userInput" placeholder="Pokemon Name">
+    <button @click="checkGuess" class="button button--primary"><span>Submit</span></button>
+    <button @click="newPokemon" :class="{ 'button--loading': loading }" class="button button--secondary button--refresh"></button>
   </section>
 </main>
 </template>
@@ -35,6 +35,7 @@ export default {
       },
       userGuess: '',
       hidden: true,
+      loading: false,
     };
   },
 
@@ -115,10 +116,12 @@ export default {
 
   methods: {
     getPokemon() {
-          axios
+      this.loading = true;
+
+      axios
       .get(`https://pokeapi.co/api/v2/pokemon/${this.pokemon.id}`)
       .then(response => {
-       
+        
         this.pokemon.name = response.data.name;
         this.pokemon.imageUrl = response.data.sprites.front_default;
 
@@ -126,6 +129,7 @@ export default {
         response.data.types.forEach(e => tempArray.push(e.type.name));
         this.pokemon.types = tempArray;
         })
+      .finally(() => (this.loading = false))
     },
 
     normalizeUserGuess() {
@@ -163,6 +167,8 @@ export default {
 <style>
   :root {
     --pokeball-border: 20px;
+    --inputSize: 36px;
+    --inputRadius: 4px;
   }
   * {
     box-sizing: border-box;
@@ -172,9 +178,8 @@ export default {
     padding: 0;
   }
   main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-rows: 63vh;
     flex-direction: column;
     width: 100vw;
     height: 100vh;
@@ -200,6 +205,8 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    align-self: flex-end;
+    justify-self: center;
     background-color: #fff;
     border: 20px solid #000;
     border-radius: 50%;
@@ -216,16 +223,120 @@ export default {
   }
   .pokemon-image--hidden {
     filter: brightness(0%);
-    /* animation: transition 3s ease-in forwards; */
   }
 
-  @keyframes transition {
-    0% {
-    filter: brightness(0%) blur(100px);
-    }
+  .pokemon-userInput {
+    display: grid;
+    grid-template-areas:"a a" 
+                        "b c";
+    grid-gap: 10px;
+    max-width: 500px;
+    margin-top: 7vh;
+    margin-left: auto;
+    margin-right: auto;
+    align-self: flex-start;
 
-    100% {
-    filter: brightness(0%) blur(0px);
+  }
+  .pokemon-userInput :nth-child(1) {
+    grid-area: a;
+  }
+  .pokemon-userInput :nth-child(2) {
+    grid-area: b;
+  }
+  .pokemon-userInput :nth-child(3) {
+    grid-area: c;
+  }
+
+  .userInput {
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: .009375em;
+    align-self: flex-end;
+    width: 100%;
+    min-width: 64px;
+    height: var(--inputSize);
+    padding: 12px 16px 14px;
+    transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0,0,0,.5);
+    border-radius: var(--inputRadius);
+    outline: 0;
+    background: none;
+    appearance: none;
+  }
+
+  .userInput:hover, .userInput:focus {
+    border-color: rgba(0,0,0,.8);
+  }
+
+  .button {
+    font-size: .875rem;
+    line-height: 2.25rem;
+    font-weight: 500;
+    letter-spacing: .0892857143em;
+    text-decoration: none;
+    text-transform: uppercase;
+    padding: 0 8px 0 8px;
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    height: var(--inputSize);
+    min-width: 64px;
+    border: 1px solid transparent;
+    border-radius: var(--inputRadius);
+    outline: none;
+    line-height: inherit;
+    appearance: none;
+    overflow: visible;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+
+  .button:hover {
+    filter: brightness(0.95);
+  }
+
+  .button:active {
+    filter: brightness(0.9);    
+  }
+
+  .button--primary {
+    background-color: #ce615a; 
+    border-color: #ce615a;
+    color: #fff;
+  }
+
+  .button--secondary {
+    background-color: #fff;
+    border-color: #ce615a;
+    color: #ce615a;
+  }
+
+  .button--refresh:before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: url(assets/refresh-icon.png);
+    background-repeat: no-repeat;
+    background-size: 24px;
+    background-position: center center;
+  }
+
+  .button--loading:before {
+    animation: loading 3s linear infinite;
+  }
+
+  @keyframes loading {
+    from {
+      transform: rotate(0deg);
+    }    
+    to {
+      transform: rotate(-360deg);
     }
   }
+
 </style>
